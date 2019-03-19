@@ -130,22 +130,31 @@ const JobTitle = styled.h4`
   font-weight: 500;
   margin-bottom: 5px;
 `;
-const Company = styled.span`
-  color: ${colors.green};
+
+const SkillsContainer = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 200px));
+  overflow: hidden;
+  margin-top: 20px;
 `;
-const JobDetails = styled.h5`
+const Skill = styled.li`
+  position: relative;
+  margin-bottom: 10px;
+  padding-left: 20px;
   font-family: ${fonts.SFMono};
-  font-size: ${fontSizes.smallish};
-  font-weight: normal;
-  letter-spacing: 0.5px;
-  color: ${colors.lightSlate};
-  margin-bottom: 30px;
-  svg {
-    width: 15px;
+  font-size: ${fontSizes.small};
+  color: ${colors.slate};
+  &:before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: ${colors.green};
+    font-size: ${fontSizes.small};
+    line-height: 12px;
   }
 `;
 
-class Jobs extends Component {
+class Skills extends Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
   };
@@ -167,13 +176,12 @@ class Jobs extends Component {
     const { data } = this.props;
 
     return (
-      <JobsContainer id="jobs" ref={el => (this.jobs = el)}>
-        <Heading>Where I&apos;ve Worked</Heading>
+      <JobsContainer id="skills" ref={el => (this.jobs = el)}>
+        <Heading>My Skills & Interests</Heading>
         <TabsContainer>
           <Tabs role="tablist">
             {data &&
               data.map(({ node }, i) => {
-                const { company } = node.frontmatter;
                 return (
                   <Tab
                     key={i}
@@ -184,7 +192,7 @@ class Jobs extends Component {
                     aria-controls={`tab${i}`}
                     id={`tab${i}`}
                     tabIndex={this.isActive(i) ? '0' : '-1'}>
-                    <span>{company}</span>
+                    <span>{node.topic}</span>
                   </Tab>
                 );
               })}
@@ -193,8 +201,6 @@ class Jobs extends Component {
           <ContentContainer>
             {data &&
               data.map(({ node }, i) => {
-                const { frontmatter, html } = node;
-                const { title, url, company, range } = frontmatter;
                 return (
                   <TabContent
                     key={i}
@@ -204,19 +210,12 @@ class Jobs extends Component {
                     tabIndex="0"
                     aria-labelledby={`job${i}`}
                     aria-hidden={!this.isActive(i)}>
-                    <JobTitle>
-                      <span>{title}</span>
-                      <Company>
-                        &nbsp;@&nbsp;
-                        <a href={url} target="_blank" rel="nofollow noopener noreferrer">
-                          {company}
-                        </a>
-                      </Company>
-                    </JobTitle>
-                    <JobDetails>
-                      <span>{range}</span>
-                    </JobDetails>
-                    <div dangerouslySetInnerHTML={{ __html: html }} />
+                    <JobTitle>{node.topic}</JobTitle>
+                    <SkillsContainer>
+                      {node.skills.map(({ skill }, i) => (
+                        <Skill key={i}>{skill}</Skill>
+                      ))}
+                    </SkillsContainer>
                   </TabContent>
                 );
               })}
@@ -227,4 +226,4 @@ class Jobs extends Component {
   }
 }
 
-export default Jobs;
+export default Skills;

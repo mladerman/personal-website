@@ -51,7 +51,7 @@ module.exports = {
   ],
 
   twitterHandle: '@mbltoo',
-  googleAnalyticsID: 'TODO',
+  googleAnalyticsID: 'UA-137819109-1',
 
   headerHeight: 100,
 
